@@ -5,6 +5,8 @@
 ![Zapier Platform 19](https://img.shields.io/badge/Zapier%20Platform-19-FF4F00?logo=zapier&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
+[![Try it in Zapier (invite only)](https://img.shields.io/badge/Try%20it%20in%20Zapier-invite%20only-FF4F00?style=for-the-badge&logo=zapier&logoColor=white)](https://zapier.com/developer/public-invite/247303/43b831dc22d46ec496e2a0d5cc7c577d/)
+
 **A Zapier integration for [Plane](https://plane.so), the open-source project management tool.** It connects Plane Cloud or self-hosted Plane to thousands of apps without any code: create work items from forms and emails, find them, and react when new ones appear.
 
 > **Unofficial.** This is a portfolio project. It is not affiliated with, endorsed by, or supported by Plane Software, Inc. "Plane" is their trademark.
@@ -78,7 +80,7 @@ zapier-platform login              # then: zapier-platform register, zapier-plat
 To connect in Zapier, create a token in Plane under **Profile settings → Personal Access Tokens**, then enter it with your workspace slug (`acme` in `app.plane.so/acme/…`). Self-hosted: also enter your instance URL. It must use HTTPS and be reachable from the internet.
 
 ## Status
-v1 is complete and runs as a private Zapier integration. It is not listed in the Zapier directory.
+v1 is complete and runs as a private Zapier integration. It is not listed in the Zapier directory, but you can try it through the **[invite link](https://zapier.com/developer/public-invite/247303/43b831dc22d46ec496e2a0d5cc7c577d/)**. Accept it in your Zapier account, then search for **Plane (Unofficial)** in the Zap editor. You need your own Plane account (the free plan works).
 
 ## License
 [MIT](LICENSE)
