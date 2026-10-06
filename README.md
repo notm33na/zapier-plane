@@ -22,12 +22,25 @@ Highlights: dropdowns for project, state and labels; clear error messages for ba
 **1. Typeform response → Create Plane work item**
 A customer submits a bug report form, and a work item appears in the *Support* project with the answers in the description and the label `from-form`.
 
-![Screenshot: Typeform to Plane Zap setup](docs/img/zap-typeform-to-plane.png)
+*Screenshot to come: `docs/img/zap-typeform-to-plane.png`*
 
 **2. New Plane work item → Slack message**
 Every new item in *Website* posts `New: WEB-42 Customer can't reset password (high)` with a link to `#web-team`.
 
-![Screenshot: Plane to Slack Zap setup](docs/img/zap-plane-to-slack.png)
+*Screenshot to come: `docs/img/zap-plane-to-slack.png`*
+
+## Screenshots
+Taken from the test Zap used to check v1 by hand. Account names are blanked out.
+
+| Connect an account | Create Work Item |
+|---|---|
+| ![Connection form with API Key, Workspace Slug and optional Plane URL](docs/img/connect-account.png) | ![Create Work Item step with project, title, priority, state and label dropdowns](docs/img/create-work-item.png) |
+| API key and workspace slug, plus an optional URL for self-hosted Plane. | State and label dropdowns load for the selected project. |
+
+| Find Work Item (with Find or Create) | The result in Plane |
+|---|---|
+| ![Find Work Item step searching by identifier, with the create-if-not-found option](docs/img/find-work-item.png) | ![The work item created by Zapier, open in Plane](docs/img/result-plane.png) |
+| Finds by identifier (`msman-18`) or exact title. Tick the box to create the item when nothing matches. | The item Zapier created, with the priority, state and label from the step. |
 
 ## How it's built
 - Zapier Platform CLI (`zapier-platform` v19, Node 22). Plane REST API v1, `/work-items/` endpoints, chosen so self-hosted Community Edition works too ([decision log](docs/ARCHITECTURE.md#10-decisions)).
