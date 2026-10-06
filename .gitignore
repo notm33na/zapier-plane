@@ -1,0 +1,21 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# dependencies
+node_modules/
+
+# build output
+build/
+dist/
+*.zip
+coverage/
+
+# Zapier CLI local state (not secret; kept out for a clean public repo)
+.zapierapprc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
