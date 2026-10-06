@@ -35,13 +35,13 @@ Every call goes to **Plane REST API v1, `/work-items/` paths**. API v2 is only o
 - **Plane URL:**
   - Blank, `https://api.plane.so` or `https://app.plane.so` → **Cloud**: API base `https://api.plane.so`, web base `https://app.plane.so`.
   - Anything else: strip trailing `/`, `/api/v1` and `/api`. The result is both the API base and the web base.
-  - Anything that isn't `https://` is rejected with "Plane URL must start with https://".
+  - Anything that isn't `https://` is rejected with "Plane URL must start with https://". Localhost and private IP ranges are rejected too (Zapier can't reach them; prevents SSRF).
 
 **Connection test** (2 requests):
 1. `GET /users/me/` checks the key and returns `{id, display_name, email, …}`.
 2. `GET /workspaces/{slug}/projects/?per_page=1` checks that the slug exists and the user can see it.
 
-Both requests run with `bundle.meta.isTestingAuth` set, so the auth-only messages in §9 apply. The test returns `{...me, workspace_slug}`.
+Both requests run with `bundle.meta.isTestingAuth` set, so the auth-only messages in §9 apply. The test returns `{id, display_name, email, workspace_slug}`.
 
 **Connection label:** `{{bundle.inputData.display_name}} ({{bundle.inputData.workspace_slug}})`, for example `Dana Lee (acme)`.
 
@@ -176,8 +176,8 @@ Messages never include the API key or the request headers.
 | D3 | Custom auth: `X-API-Key` + slug + optional URL | [Plane API intro](https://developers.plane.so/api-reference/introduction) · [Zapier CLI](https://docs.zapier.com/platform/build-cli/overview) | Decided |
 | D4 | Workspace set per connection (no list-workspaces endpoint in v1 or v2) | [Plane docs index](https://developers.plane.so/llms.txt) | Decided |
 | D5 | Connection test = `users/me` + projects | [Current user](https://developers.plane.so/api-reference/user/get-current-user) | Decided |
-| D6 | Trigger: 1 page, `-created_at`, 100 items, dedupe `id` | [List work items](https://developers.plane.so/api-reference/issue/list-issues) · [Zapier dedupe](https://docs.zapier.com/platform/build/deduplication) | Decided (T5b fallback: client-side sort) |
-| D7 | Dropdowns follow `next_cursor`, at most 5 pages or 25 s | [Plane API intro](https://developers.plane.so/api-reference/introduction) | Decided (T12 fallback: page 1 only) |
+| D6 | Trigger: 1 page, `-created_at`, 100 items, dedupe `id` | [List work items](https://developers.plane.so/api-reference/issue/list-issues) · [Zapier dedupe](https://docs.zapier.com/platform/build/deduplication) | Decided; T5b passed 2026-10-06 (API honours `order_by`; client-side sort kept as a guard) |
+| D7 | Dropdowns follow `next_cursor`, at most 5 pages or 25 s | [Plane API intro](https://developers.plane.so/api-reference/introduction) | Decided; T12 passed 2026-10-06 (multi-page walk works) |
 | D8 | Search: identifier route, then `/work-items/search/` with `limit=100`; exact match by default | [Search](https://developers.plane.so/api-reference/issue/search-issues) · [By identifier](https://developers.plane.so/api-reference/issue/get-issue-sequence-id) | Decided |
 | D9 | Find or Create via `searchOrCreates` | [Zapier schema](https://github.com/zapier/zapier-platform/blob/main/packages/schema/docs/build/schema.md#searchorcreateschema) | Decided |
 | D10 | Map errors in `afterResponse`; catch network errors in the client | [Zapier CLI](https://docs.zapier.com/platform/build-cli/overview) · [CE base.py](https://github.com/makeplane/plane/blob/7466675e471efe1c96b122615f7a0d30c9b2eb05/apps/api/plane/api/views/base.py) | Decided |
@@ -187,6 +187,6 @@ Messages never include the API key or the request headers.
 | D14 | Plane URL must be HTTPS | PRD NFR3 | Decided |
 | D15 | API use is allowed ("published APIs…", §2.5(g)) | [Plane terms](https://plane.so/legals/terms-and-conditions) | Decided |
 | D16 | Move to API v2 | [v2 intro](https://developers.plane.so/api-reference/v2/introduction) | Deferred until CE serves `/api/v2/` |
-| D17 | Bad key = 401 **or** 403 with an auth `detail`; wrong slug = 403/404 | [CE api_authentication.py](https://github.com/makeplane/plane/blob/7466675e471efe1c96b122615f7a0d30c9b2eb05/apps/api/plane/api/middleware/api_authentication.py) | Decided (T13 confirms) |
+| D17 | Bad key = 401 **or** 403 with an auth `detail`; wrong slug = 403/404 | [CE api_authentication.py](https://github.com/makeplane/plane/blob/7466675e471efe1c96b122615f7a0d30c9b2eb05/apps/api/plane/api/middleware/api_authentication.py) | Decided; T13 passed 2026-10-06 (Cloud: bad key → 403 "Given API token is not valid"; bad slug → 404 "Workspace not found.") |
 | D18 | If the read-back after a create fails, return the POST body | — | Decided |
 | D19 | Search requires a project, so Find or Create can't match across projects | — | Decided |

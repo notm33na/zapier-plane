@@ -19,3 +19,6 @@ coverage/
 .DS_Store
 Thumbs.db
 *.log
+
+# Zapier CLI env file
+.environment

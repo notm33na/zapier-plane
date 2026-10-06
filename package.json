@@ -1,0 +1,21 @@
+{
+  "name": "zapier-plane",
+  "version": "1.0.0",
+  "description": "Unofficial Zapier integration for Plane (plane.so). Portfolio project.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "node node_modules/jest/bin/jest.js --testTimeout 10000 --testPathIgnorePatterns /node_modules/ /test/integration/",
+    "test:int": "node node_modules/jest/bin/jest.js --runInBand --testTimeout 60000 test/integration"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "zapier-platform-core": "19.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.0",
+    "nock": "^14.0.0"
+  }
+}
