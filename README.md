@@ -39,4 +39,4 @@ Every new item in *Website* posts `New: WEB-42 Customer can't reset password (hi
 3. Self-hosted? Also enter your instance URL (HTTPS, reachable from the internet).
 
 ## Status
-v1 is in development. It is a private integration, not listed in the Zapier directory.
+v1 is complete. Every trigger, action and search passes its unit tests and its live tests against Plane Cloud, and was checked by hand in the Zapier editor (October 2026). It is a private integration, not listed in the Zapier directory.
