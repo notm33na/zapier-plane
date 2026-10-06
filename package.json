@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "node node_modules/jest/bin/jest.js --testTimeout 10000 --testPathIgnorePatterns /node_modules/ /test/integration/",
+    "test": "node node_modules/jest/bin/jest.js --runInBand --testTimeout 10000 --testPathIgnorePatterns /node_modules/ /test/integration/",
     "test:int": "node node_modules/jest/bin/jest.js --runInBand --testTimeout 60000 test/integration"
   },
   "engines": {

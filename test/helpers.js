@@ -10,6 +10,17 @@ const appTester = zapier.createAppTester(App);
 // Unit tests never touch the network; unmatched requests fail with ENETUNREACH.
 nock.disableNetConnect();
 
+// Jest gives each test file a fresh copy of nock, but nock 14 patches Node's
+// http for the whole process. When several files share a worker (e.g. CI with
+// 2 cores, or --runInBand), a stale patch from an earlier file would swallow
+// this file's mocks. Remove it when the file finishes.
+/* globals afterAll */
+afterAll(() => {
+  nock.cleanAll();
+  nock.enableNetConnect();
+  nock.restore();
+});
+
 const API = 'https://api.plane.so';
 const BASE = '/api/v1';
 const SLUG = 'acme';
