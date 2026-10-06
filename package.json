@@ -17,5 +17,6 @@
   "devDependencies": {
     "jest": "^29.6.0",
     "nock": "^14.0.0"
-  }
+  },
+  "license": "MIT"
 }

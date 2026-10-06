@@ -1,13 +1,20 @@
 # Plane for Zapier
 
+[![tests](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml/badge.svg)](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml)
+![Node 22](https://img.shields.io/badge/node-22-339933?logo=node.js&logoColor=white)
+![Zapier Platform 19](https://img.shields.io/badge/Zapier%20Platform-19-FF4F00?logo=zapier&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+**A Zapier integration for [Plane](https://plane.so), the open-source project management tool.** It connects Plane Cloud or self-hosted Plane to thousands of apps without any code: create work items from forms and emails, find them, and react when new ones appear.
+
 > **Unofficial.** This is a portfolio project. It is not affiliated with, endorsed by, or supported by Plane Software, Inc. "Plane" is their trademark.
 
+![Create Work Item step in the Zapier editor](docs/img/create-work-item.png)
+
 ## The problem
-[Plane](https://plane.so) is a popular open-source project management tool, but there is no Plane app in the Zapier directory. Teams on Plane end up copying form responses, support emails and alerts into Plane by hand, and then announcing new work in Slack by hand too.
+Plane has no app in the Zapier directory. Teams on Plane copy form responses, support emails and alerts into Plane by hand, and then announce new work in Slack by hand too.
 
-## What this integration does
-It connects Plane Cloud or a self-hosted Plane instance to thousands of apps on Zapier with a personal API key.
-
+## What it does
 | Type | Name | What it does |
 |---|---|---|
 | Trigger | **New Work Item** | Starts a Zap when a work item is created in a project you choose. |
@@ -15,41 +22,63 @@ It connects Plane Cloud or a self-hosted Plane instance to thousands of apps on 
 | Search | **Find Work Item** | Finds a work item in a project by exact title or identifier (e.g. `WEB-42`). |
 | Search or create | **Find or Create Work Item** | Finds a matching item in the chosen project, or creates it if none exists. |
 
-Highlights: dropdowns for project, state and labels; clear error messages for bad keys, missing projects and rate limits; and it stays within Plane's 60 requests/minute limit.
+- **Dropdowns:** project, state and labels. State and labels reload when the project changes.
+- **Plain-language errors:** for a bad API key, a wrong workspace, missing access and rate limits.
+- **Within Plane's limit:** stays under 60 requests/minute, and every step finishes within Zapier's 30-second limit.
+- **Cloud and self-hosted:** works with Plane Cloud and self-hosted Community Edition.
 
-## Example Zaps
-
-**1. Typeform response → Create Plane work item**
-A customer submits a bug report form, and a work item appears in the *Support* project with the answers in the description and the label `from-form`.
-
-*Screenshot to come: `docs/img/zap-typeform-to-plane.png`*
-
-**2. New Plane work item → Slack message**
-Every new item in *Website* posts `New: WEB-42 Customer can't reset password (high)` with a link to `#web-team`.
-
-*Screenshot to come: `docs/img/zap-plane-to-slack.png`*
+### Example Zaps
+- **Typeform response → Create Plane work item.** A bug-report form becomes a work item in *Support*, with the answers in the description.
+- **New Plane work item → Slack message.** Every new item in *Website* posts `New: WEB-42 Customer can't reset password (high)` with a link.
 
 ## Screenshots
-Taken from the test Zap used to check v1 by hand. Account names are blanked out.
+Account names are blanked out.
 
-| Connect an account | Create Work Item |
-|---|---|
-| ![Connection form with API Key, Workspace Slug and optional Plane URL](docs/img/connect-account.png) | ![Create Work Item step with project, title, priority, state and label dropdowns](docs/img/create-work-item.png) |
-| API key and workspace slug, plus an optional URL for self-hosted Plane. | State and label dropdowns load for the selected project. |
-
-| Find Work Item (with Find or Create) | The result in Plane |
-|---|---|
-| ![Find Work Item step searching by identifier, with the create-if-not-found option](docs/img/find-work-item.png) | ![The work item created by Zapier, open in Plane](docs/img/result-plane.png) |
-| Finds by identifier (`msman-18`) or exact title. Tick the box to create the item when nothing matches. | The item Zapier created, with the priority, state and label from the step. |
+| Connect an account | Find Work Item (with Find or Create) | The result in Plane |
+|---|---|---|
+| ![Connection form](docs/img/connect-account.png) | ![Find Work Item step](docs/img/find-work-item.png) | ![Work item created by Zapier, open in Plane](docs/img/result-plane.png) |
+| API key and workspace slug, plus an optional URL for self-hosted Plane. | Search by identifier or exact title. Tick the box to create the item when nothing matches. | The item Zapier created, with its priority, state and label. |
 
 ## How it's built
-- Zapier Platform CLI (`zapier-platform` v19, Node 22). Plane REST API v1, `/work-items/` endpoints, chosen so self-hosted Community Edition works too ([decision log](docs/ARCHITECTURE.md#10-decisions)).
-- Product spec: [docs/PRD.md](docs/PRD.md). Technical design: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- **Stack:** Zapier Platform CLI (`zapier-platform` v19), Node 22, Plane REST API.
+- **Key decisions** (each sourced in the [decision log](docs/ARCHITECTURE.md#10-decisions)):
+  - Plane's newer API v2 is only on Plane Cloud. The integration uses API v1's `/work-items/` endpoints so self-hosted Community Edition works too.
+  - Plane answers a bad API key with **403**, not 401. This was found in Plane's source code and confirmed against the live API, and the integration tells it apart from a real permission error.
+  - Find or Create matches only inside the chosen project, and on an exact title by default, so it doesn't create duplicates by mistake.
+- **Docs:** [Product spec (PRD)](docs/PRD.md) · [Architecture](docs/ARCHITECTURE.md).
 
-## Connect your account
-1. In Plane, open **Profile settings → Personal Access Tokens** and create a token.
-2. In Zapier, add a Plane connection. Paste the token and your workspace slug (`acme` in `app.plane.so/acme/…`).
-3. Self-hosted? Also enter your instance URL (HTTPS, reachable from the internet).
+## Testing
+| Suite | What it covers | Result |
+|---|---|---|
+| Unit (`npm test`) | 100 tests with mocked HTTP: auth, error mapping, pagination, trigger, create, search | ✅ runs in CI on every push |
+| Live (`npm run test:int`) | 6 end-to-end tests against a real Plane Cloud workspace. They delete everything they create | ✅ passed |
+| Manual | Every step tested in the Zapier editor, including the work item link | ✅ passed |
+
+## Project structure
+```
+index.js              app definition: auth, triggers, creates, searches, Find or Create
+authentication.js     API-key auth, connection test and label
+lib/                  HTTP client, error mapping, formatting, shared fields
+triggers/             New Work Item + dropdown triggers (projects, states, labels)
+creates/              Create Work Item
+searches/             Find Work Item
+test/                 unit tests (nock) and live tests (test/integration)
+docs/                 PRD, architecture, screenshots
+```
+
+## Run it yourself
+Needs Node 22 and the Zapier CLI (`npm i -g zapier-platform-cli`).
+```bash
+npm install
+npm test                           # unit tests, no credentials needed
+cp .env.example .env               # add PLANE_API_KEY and PLANE_WORKSPACE_SLUG
+npm run test:int                   # live tests against your Plane workspace
+zapier-platform login              # then: zapier-platform register, zapier-platform push
+```
+To connect in Zapier, create a token in Plane under **Profile settings → Personal Access Tokens**, then enter it with your workspace slug (`acme` in `app.plane.so/acme/…`). Self-hosted: also enter your instance URL. It must use HTTPS and be reachable from the internet.
 
 ## Status
-v1 is complete. Every trigger, action and search passes its unit tests and its live tests against Plane Cloud, and was checked by hand in the Zapier editor (October 2026). It is a private integration, not listed in the Zapier directory.
+v1 is complete and runs as a private Zapier integration. It is not listed in the Zapier directory.
+
+## License
+[MIT](LICENSE)
