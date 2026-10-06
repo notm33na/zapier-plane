@@ -4,11 +4,10 @@ const { getContext, request } = require('../lib/client');
 const { projectField } = require('../lib/fields');
 const {
   toWorkItem,
+  WORK_ITEM_EXPAND,
   SAMPLE_WORK_ITEM,
   WORK_ITEM_OUTPUT_FIELDS,
 } = require('../lib/format');
-
-const EXPAND = 'state,labels,assignees,project';
 
 const byNewest = (a, b) =>
   String(b.created_at || '').localeCompare(String(a.created_at || ''));
@@ -21,7 +20,7 @@ const perform = async (z, bundle) => {
     path: `/workspaces/${encodeURIComponent(
       context.slug,
     )}/projects/${encodeURIComponent(projectId)}/work-items/`,
-    params: { order_by: '-created_at', per_page: 100, expand: EXPAND },
+    params: { order_by: '-created_at', per_page: 100, expand: WORK_ITEM_EXPAND },
   });
   const body = response.data || {};
   const items = Array.isArray(body) ? body : body.results || [];

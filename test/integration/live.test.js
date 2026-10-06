@@ -107,6 +107,61 @@ describeLive('live Plane API', () => {
   });
 
   it(
+    'T10 end to end: dropdowns -> create -> find (title, identifier) -> trigger',
+    safe(async () => {
+      const withInput = (inputData) => ({ ...bundle(), inputData });
+
+      const projects = await run(App.triggers.project_list.operation.perform);
+      expect(projects.map((p) => p.id)).toContain(projectId);
+      const states = await run(
+        App.triggers.state_list.operation.perform,
+        withInput({ project_id: projectId }),
+      );
+      expect(states.length).toBeGreaterThan(0);
+      const state = states[0];
+
+      const title = `${RUN_ID} T10 café ✓`;
+      const item = await run(
+        App.creates.create_work_item.operation.perform,
+        withInput({
+          project_id: projectId,
+          name: title,
+          description: 'First line & <tag>\nSecond line',
+          priority: 'medium',
+          state_id: state.id,
+        }),
+      );
+      created.workItems.push(item.id);
+      expect(item.name).toBe(title);
+      expect(item.priority).toBe('medium');
+      expect(item.state_id).toBe(state.id);
+      expect(item.state_name).toBe(state.name);
+      expect(item.description_text).toBe('First line & <tag>\nSecond line');
+      expect(item.identifier).toMatch(/^[A-Z0-9]+-\d+$/);
+      expect(item.url.endsWith(`/browse/${item.identifier}/`)).toBe(true);
+
+      const find = (inputData) =>
+        run(App.searches.find_work_item.operation.perform, withInput({ project_id: projectId, ...inputData }));
+
+      const byTitle = await find({ query: title.toUpperCase() });
+      expect(byTitle.map((r) => r.id)).toEqual([item.id]);
+
+      const byIdentifier = await find({ query: item.identifier.toLowerCase() });
+      expect(byIdentifier.map((r) => r.id)).toEqual([item.id]);
+      expect(byIdentifier[0].state_name).toBe(state.name);
+
+      // Find or Create would create here: the exact title doesn't exist.
+      expect(await find({ query: `${RUN_ID} no such title` })).toEqual([]);
+
+      const triggered = await run(
+        App.triggers.new_work_item.operation.perform,
+        withInput({ project_id: projectId }),
+      );
+      expect(triggered[0].id).toBe(item.id);
+    }),
+  );
+
+  it(
     'T1 connection test returns the user and slug',
     safe(async () => {
       const result = await run(App.authentication.test, bundle({}, { isTestingAuth: true }));
