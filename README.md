@@ -11,6 +11,8 @@
 
 > **Unofficial.** This is a portfolio project. It is not affiliated with, endorsed by, or supported by Plane Software, Inc. "Plane" is their trademark.
 
+[![Watch the demo (2 min): a new Plane work item posts to Slack](docs/img/demo-thumbnail.png)](docs/demo.mp4)
+
 ![Create Work Item step in the Zapier editor](docs/img/create-work-item.png)
 
 ## The problem
