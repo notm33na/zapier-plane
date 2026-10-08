@@ -1,5 +1,7 @@
 # Plane for Zapier
 
+**Live: https://notm33na.github.io/zapier-plane/**
+
 [![tests](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml/badge.svg)](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml)
 ![Node 22](https://img.shields.io/badge/node-22-339933?logo=node.js&logoColor=white)
 ![Zapier Platform 19](https://img.shields.io/badge/Zapier%20Platform-19-FF4F00?logo=zapier&logoColor=white)
