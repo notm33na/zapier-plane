@@ -11,7 +11,7 @@ Workspace slug, API key and account names are redacted (`<slug>`). This was a sm
 | 2 | Live Create Work Item → verified in Plane → Find Work Item | **PASS** |
 | 3 | Live Zap "New Plane work item → Slack" | **PASS** (confirmed by owner in Slack and Zap history) |
 | 4 | README demo video resolves and plays from GitHub | **PASS** (inline playback confirmed by owner) |
-| 5 | Test items deleted | **PASS** (the Zap-check item is kept on purpose) |
+| 5 | Test items deleted | **PASS** (all three, including the Zap-check item) |
 
 ## 1. Pushed version vs repo: PASS
 - `zapier-platform versions`: one version, **1.0.0**, platform 19.1.0, state `private`, pushed 2026-10-06 06:56 UTC.
@@ -69,7 +69,6 @@ Run locally, the trigger's own code returns MSMAN-14 as the first (newest) resul
 
 **Result (owner check, 2026-10-08): PASS.** The Slack message and the Zap history run both appeared for MSMAN-14.
 
-Then delete MSMAN-14 in Plane, or ask Claude to delete it.
 
 ## 4. Demo video: PASS
 | Link (from README) | Result |
@@ -90,7 +89,7 @@ GitHub serves the raw file as `application/octet-stream`, so the "raw" link down
 |---|---|
 | TEST-11 (step 2) | Deleted (404 confirmed) |
 | Temp label `smoke-muzu9f7s-label` (step 2) | Deleted |
-| **MSMAN-14** `e41d942e-7fc3-47ba-aaf9-b640d4522c8b` (step 3) | **Kept for the Zap check. Delete after checking.** |
+| **MSMAN-14** `e41d942e-7fc3-47ba-aaf9-b640d4522c8b` (step 3) | Deleted after the Zap check (404 confirmed) |
 
 ## Proposed fixes
 Reviewed by the owner on 2026-10-08: none will be applied.
