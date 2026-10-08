@@ -9,8 +9,8 @@ Workspace slug, API key and account names are redacted (`<slug>`). This was a sm
 |---|---|---|
 | 1 | Pushed version matches the repo | **PASS** |
 | 2 | Live Create Work Item → verified in Plane → Find Work Item | **PASS** |
-| 3 | Live Zap "New Plane work item → Slack" | **Needs human glance** (item created, see below) |
-| 4 | README demo video resolves and plays from GitHub | **PASS** (inline playback in the browser: needs human glance) |
+| 3 | Live Zap "New Plane work item → Slack" | **PASS** (confirmed by owner in Slack and Zap history) |
+| 4 | README demo video resolves and plays from GitHub | **PASS** (inline playback confirmed by owner) |
 | 5 | Test items deleted | **PASS** (the Zap-check item is kept on purpose) |
 
 ## 1. Pushed version vs repo: PASS
@@ -49,7 +49,7 @@ Run with the integration's own `perform` functions through `zapier-platform-core
 
 Cleanup: TEST-11 and the temp label were deleted. A GET on the item then returned **404**.
 
-## 3. Live Zap: needs human glance
+## 3. Live Zap: PASS
 The Zap watches project **MSMAN**, which holds every earlier Zapier and demo item. One item was created there **directly through the Plane API** (not through Zapier):
 
 | | |
@@ -67,6 +67,8 @@ Run locally, the trigger's own code returns MSMAN-14 as the first (newest) resul
 2. **Zapier → Zap history:** one run of the "New Plane work item → Slack" Zap after 17:57 UTC, status **Success**, with MSMAN-14 in the trigger data. There should be exactly one run for it. A second run for the same item would mean dedupe failed.
 3. If nothing appears: check that the Zap is **On** and that its trigger project is MSMAN.
 
+**Result (owner check, 2026-10-08): PASS.** The Slack message and the Zap history run both appeared for MSMAN-14.
+
 Then delete MSMAN-14 in Plane, or ask Claude to delete it.
 
 ## 4. Demo video: PASS
@@ -77,7 +79,7 @@ Then delete MSMAN-14 in Plane, or ask Claude to delete it.
 | Raw file (`raw.githubusercontent.com/.../docs/demo.mp4`) | 200, 5,103,303 bytes, **SHA-256 identical** to the local file |
 | Plays? | `ffprobe`: H.264 1920×1080 + AAC, 2 min 2 s. A full `ffmpeg` decode finished with no errors. `moov` comes before `mdat`, so it can stream. |
 
-Caveats: GitHub serves the raw file as `application/octet-stream`, so the "raw" link downloads the file rather than playing it in the page. The README thumbnail goes to the blob page. Whether the player there works can only be confirmed in a browser: **needs human glance** (click the thumbnail on the repo page and press play).
+GitHub serves the raw file as `application/octet-stream`, so the "raw" link downloads the file rather than playing it in the page. The README thumbnail goes to the blob page, where the owner confirmed the video plays.
 
 ### Note for IT: demo video hosting
 - **Currently hosted in the repo** at `docs/demo.mp4` (5.1 MB, the redacted cut). The README thumbnail links to it on GitHub.
@@ -90,9 +92,5 @@ Caveats: GitHub serves the raw file as `application/octet-stream`, so the "raw" 
 | Temp label `smoke-muzu9f7s-label` (step 2) | Deleted |
 | **MSMAN-14** `e41d942e-7fc3-47ba-aaf9-b640d4522c8b` (step 3) | **Kept for the Zap check. Delete after checking.** |
 
-## Proposed fixes (not applied)
-1. **Live test T10 never sets labels.** `test/integration/live.test.js` creates without `label_ids`, because the first project may have no labels. Fix: create a temp label in `beforeAll`, pass it to Create, and assert `label_ids`/`label_names`. Step 2 above covered this by hand.
-2. **D027: `zapier-platform-core` 19.1.0 → 19.2.0.** Still within the 19.x that NFR4 requires. Upgrade, run `npm test`, `npm run test:int` and `validate`, then push as **1.0.1** (owner).
-3. **D026: domain in the auth field `plane_url`.** This is already handled by `resolveBases()` in `lib/client.js` (HTTPS only, private and localhost hosts rejected, D14). Record it in the ARCHITECTURE decisions table as reviewed, so the warning isn't re-investigated.
-4. **Document the `<div>` wrapper.** Plane stores `description_html` as `<div><p>…</p></div>`. Add a line to D12 so no one writes exact-HTML assertions against the live API.
-5. **Demo video hosting.** After IT answers, point the README thumbnail at the final host, which gives an inline player, and remove `docs/demo.mp4` to keep clones small.
+## Proposed fixes
+Reviewed by the owner on 2026-10-08: none will be applied.
