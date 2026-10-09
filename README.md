@@ -1,6 +1,6 @@
 # Plane for Zapier
 
-**Live: https://notm33na.github.io/zapier-plane/**
+**Live: https://notm33na.github.io/zapier-plane/** · Zapier version 1.0.0 (invite only)
 
 [![tests](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml/badge.svg)](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml)
 ![Node 22](https://img.shields.io/badge/node-22-339933?logo=node.js&logoColor=white)
@@ -84,7 +84,7 @@ zapier-platform login              # then: zapier-platform register, zapier-plat
 To connect in Zapier, create a token in Plane under **Profile settings → Personal Access Tokens**, then enter it with your workspace slug (`acme` in `app.plane.so/acme/…`). Self-hosted: also enter your instance URL. It must use HTTPS and be reachable from the internet.
 
 ## Status
-v1 is complete and runs as a private Zapier integration. It is not listed in the Zapier directory, but you can try it through the **[invite link](https://zapier.com/developer/public-invite/247303/43b831dc22d46ec496e2a0d5cc7c577d/)**. Accept it in your Zapier account, then search for **Plane (Unofficial)** in the Zap editor. You need your own Plane account (the free plan works).
+**v1.0.0 is live** (deployed 2026-10-09) as a private, invite-only Zapier integration. It is not listed in the Zapier directory, but you can try it through the **[invite link](https://zapier.com/developer/public-invite/247303/43b831dc22d46ec496e2a0d5cc7c577d/)**. Accept it in your Zapier account, then search for **Plane (Unofficial)** in the Zap editor. You need your own Plane account (the free plan works). Release notes: [CHANGELOG](CHANGELOG.md) · deployment record: [DEPLOYMENT](docs/DEPLOYMENT.md).
 
 ## License
 [MIT](LICENSE)
