@@ -2,7 +2,7 @@
 
 **Live: https://notm33na.github.io/zapier-plane/** · Zapier version 1.0.0 (invite only)
 
-Built by **M&S Manager** · [case study and more builds](https://media-and-software-manager.vercel.app/automation.html#work)
+Built by **M&S Manager** · [case study and more builds](https://www.mediaandsoftwaremanager.com/automation#work)
 
 [![tests](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml/badge.svg)](https://github.com/notm33na/zapier-plane/actions/workflows/test.yml)
 ![Node 22](https://img.shields.io/badge/node-22-339933?logo=node.js&logoColor=white)
